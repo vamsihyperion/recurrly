@@ -3,23 +3,23 @@ import "@/global.css";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 
+SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
-  const [fontLoaded] = useFonts({
-    "sans-regular": require("../assets/fonts/PlusJakartaSans-Regular.ttf"),
-    "sans-bold": require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
-    "sans-semi-bold": require("../assets/fonts/PlusJakartaSans-SemiBold.ttf"),
-    "sans-medium": require("../assets/fonts/PlusJakartaSans-Medium.ttf"),
-    "sans-extra-bold": require("../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
-    "sans-light": require("../assets/fonts/PlusJakartaSans-Light.ttf"),
+  const [fontsLoaded] = useFonts({
+    "sans-Regular": require("../assets/fonts/PlusJakartaSans-Regular.ttf"),
+    "sans-Bold": require("../assets/fonts/PlusJakartaSans-Bold.ttf"),
+    "sans-Medium": require("../assets/fonts/PlusJakartaSans-Medium.ttf"),
+    "sans-SemiBold": require("../assets/fonts/PlusJakartaSans-SemiBold.ttf"),
+    "sans-ExtraBold": require("../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
+    "sans-Light": require("../assets/fonts/PlusJakartaSans-Light.ttf")
   });
   useEffect(() => {
-    if (fontLoaded) {
-      SplashScreen.hideAsync(); // Hide the splash screen when fonts are loaded
+    if (!fontsLoaded) {
+      SplashScreen.hideAsync();
     }
-  }, [fontLoaded]);
-
-  if (!fontLoaded) {
-    return null; // or a loading indicator
+  }, [fontsLoaded]);
+  if (!fontsLoaded) {
+    return null;
   }
   return <Stack screenOptions={{ headerShown: false }} />;
 }
