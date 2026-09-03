@@ -16,25 +16,27 @@ if (!publishableKey) {
 function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
-  const isClerkReady = isLoaded || Boolean((globalThis as { Clerk?: { loaded?: boolean } }).Clerk?.loaded);
 
   useEffect(() => {
-   if (!isClerkReady) {
+   if (!isLoaded) {
      return;
    }
 
    const currentRoute = segments[0];
-   const inAuthRoute = currentRoute === "(auth)" || currentRoute === undefined;
-   const inTabsRoute = currentRoute === "(tabs)";
+   const inPublicRoute = currentRoute === "(auth)" || currentRoute === undefined;
 
-   if (isSignedIn && inAuthRoute) {
+   if (isSignedIn && inPublicRoute) {
      router.replace("/(tabs)");
    }
 
-   if (!isSignedIn && inTabsRoute) {
+   if (!isSignedIn && !inPublicRoute) {
      router.replace("/(auth)/signIn");
    }
-  }, [isClerkReady, isSignedIn, segments]);
+  }, [isLoaded, isSignedIn, segments]);
+
+  if (!isLoaded) {
+   return null;
+  }
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }

@@ -1,4 +1,4 @@
-import { useClerk, useSignIn } from "@clerk/expo";
+import { useSignIn } from "@clerk/expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Link, router } from "expo-router";
 import { useMemo, useState } from "react";
@@ -16,7 +16,6 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function SignInScreen() {
   const { signIn } = useSignIn();
-  const { setActive } = useClerk();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitError, setSubmitError] = useState("");
@@ -45,9 +44,6 @@ export default function SignInScreen() {
     if (!password) {
       setPasswordError("Enter your password.");
       isValid = false;
-    } else if (password.length < 8 || password.length > 15) {
-      setPasswordError("Password must be between 8 and 15 characters.");
-      isValid = false;
     } else {
       setPasswordError("");
     }
@@ -69,7 +65,7 @@ export default function SignInScreen() {
     setIsSubmitting(true);
 
     try {
-      const result = await (signIn as any).password({
+      const result = await signIn.password({
         identifier: email.trim(),
         password,
       });
@@ -78,7 +74,7 @@ export default function SignInScreen() {
       }
 
       if (signIn.status === "complete") {
-        const finalizeResult = await (signIn as any).finalize();
+        const finalizeResult = await signIn.finalize();
         if (finalizeResult?.error) {
           throw finalizeResult.error;
         }
@@ -161,7 +157,6 @@ export default function SignInScreen() {
                   <View className="relative">
                     <TextInput
                       secureTextEntry={!showPassword}
-                      maxLength={15}
                       value={password}
                       onChangeText={(value) => {
                         setPassword(value);

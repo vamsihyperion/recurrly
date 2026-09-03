@@ -149,6 +149,7 @@ export default function SignUpScreen() {
 
             <View className="auth-card">
               <View className="auth-form">
+                <View nativeID="clerk-captcha" />
                 <View className="auth-field">
                   <Text className="auth-label">Email</Text>
                   <TextInput
