@@ -275,7 +275,7 @@
     }
 
     .auth-card {
-        @apply mt-8 rounded-3xl border border-border bg-card p-5;
+        @apply mt-8 w-full rounded-3xl border border-border bg-card p-5;
     }
 
     .auth-form {

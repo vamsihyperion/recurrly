@@ -1,15 +1,46 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { useAuth } from "@clerk/expo";
+import { router } from "expo-router";
+import { useState } from "react";
+import { Pressable, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
 
 const SafeAreaView = styled(RNSafeAreView);
-const settings = () => {
-    return (
-        <SafeAreaView className="flex-1 items-center justify-center bg-white">
-            <Text>settings</Text>
-        </SafeAreaView>
-    )
-}
 
-export default settings
+export default function SettingsScreen() {
+  const { signOut } = useAuth();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    setSignOutError("");
+
+    try {
+      await signOut();
+      router.replace("/(auth)/signIn");
+    } catch {
+      setSignOutError("We couldn't sign you out. Please try again.");
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
+
+  return (
+    <SafeAreaView className="flex-1 items-center justify-center bg-background">
+      <View className="gap-4">
+        <Text className="text-2xl font-sans-bold text-primary">Settings</Text>
+        {signOutError ? <Text className="text-sm font-sans-medium text-destructive">{signOutError}</Text> : null}
+        <Pressable
+          className="rounded-2xl bg-accent px-6 py-3"
+          onPress={handleSignOut}
+          disabled={isSigningOut}
+        >
+          <Text className="text-base font-sans-bold text-primary">
+            {isSigningOut ? "Signing out…" : "Sign out"}
+          </Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
+  );
+}
